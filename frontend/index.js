@@ -29,7 +29,10 @@ export default class Crypto {
         // Keep attribute private crypto handler
         this._crypt = window.crypto.subtle
         this._sign = {
-            name: "RSASSA-PSS",
+            name: "RSASSA-PKCS1-v1_5",
+            hash: {
+                name: "SHA-256"
+            },
             modulusLength: 2048,
             extractable: false,
             publicExponent: 0x10001
