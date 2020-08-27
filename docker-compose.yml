@@ -1,0 +1,9 @@
+version: '3'
+services:
+
+  crypto_mongodb:
+    image: mongo
+    container_name: crypto_mongo
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
