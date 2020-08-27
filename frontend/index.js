@@ -64,7 +64,7 @@ export default class Crypto {
     importKey() {
         this._crypt.importKey('spki', this._sign, {
             name: "RSA-OAEP"
-        }, false, ["encrypt"])
+        }, true, ["encrypt"])
     }
 
     crypt(data, pub) {
