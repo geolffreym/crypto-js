@@ -1,0 +1,14 @@
+{
+  "name": "encrypt_decrypt",
+  "version": "1.0.0",
+  "description": "Js Asymmetric - Symmetric",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "ZorrillosDev",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^8.2.0"
+  }
+}
