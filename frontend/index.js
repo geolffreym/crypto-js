@@ -32,7 +32,6 @@ export default class Crypto {
 
     }
 
-
     crypt(data, pub) {
         this._crypt.encrypt(
             {
