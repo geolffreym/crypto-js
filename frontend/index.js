@@ -24,12 +24,47 @@
 export default class Crypto {
 
     constructor() {
-        if (!window.crypto)
-            throw Error('Crypto not supported.')
-
+        window.crypto = window.crypto || window.msCrypto
+        if (!window.crypto) throw Error('Crypto not supported.')
         // Keep attribute private crypto handler
         this._crypt = window.crypto.subtle
+        this._sign = {
+            name: "RSASSA-PSS",
+            modulusLength: 2048,
+            extractable: false,
+            publicExponent: 0x10001
+        }
 
+    }
+
+    base64StringToArrayBuffer(b64str) {
+        let byteStr = atob(b64str)
+        let bytes = new Uint8Array(byteStr.length)
+        for (let i = 0; i < byteStr.length; i++) {
+            bytes[i] = byteStr.charCodeAt(i)
+        }
+        return bytes.buffer
+    }
+
+    convertPemToBinary(pem) {
+        let encoded = ''
+        let lines = pem.split('\n')
+        for (let i = 0; i < lines.length; i++) {
+            if (lines[i].trim().length > 0 &&
+                lines[i].indexOf('-BEGIN RSA PRIVATE KEY-') < 0 &&
+                lines[i].indexOf('-BEGIN RSA PUBLIC KEY-') < 0 &&
+                lines[i].indexOf('-END RSA PRIVATE KEY-') < 0 &&
+                lines[i].indexOf('-END RSA PUBLIC KEY-') < 0) {
+                encoded += lines[i].trim()
+            }
+        }
+        return this.base64StringToArrayBuffer(encoded)
+    }
+
+    importKey() {
+        this._crypt.importKey('spki', this._sign, {
+            name: "RSA-OAEP"
+        }, false, ["encrypt"])
     }
 
     crypt(data, pub) {
