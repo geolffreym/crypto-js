@@ -6,20 +6,34 @@
 </head>
 <body>
 
-<script src="./frontend/index.js"></script>
+<textarea name="" id="pub" cols="30" rows="10">
+  -----BEGIN PUBLIC KEY-----
+    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApR5DjpuZkwBc/7y7J8v1
+    j0riHfRaZiGWo4Hmv9Hqz6UalnHS0qxGwcbUIhROAHr34Iz4cJjKbB2fpvV8xbkK
+    Mzz697byqUzHzr6FWzyYTgg2dkHlUNarE6OkVUQL11gcgH3CPMwae+Ik6zQCHrCR
+    kRdwcusykeDs32ZNLF/EclZtOYqqpCu7TbE5ukNuLU906VZHdZSxgN39WEcgBLT+
+    RaY+Vx5X0243SSw3kgpEu+h9V3WmgMoG3uZqKh80cS6E3sCg6pVVQ47ZMDLxhcZY
+    bdhcKeL64SzItYjRTRLDWAPUjxc9fKUOpYtTDQgwmYyXpwMRzsRtKsXOPmzkdQq6
+    4QIDAQAB
+    -----END PUBLIC KEY-----
+
+</textarea>
+<input type="text" id="tocr">
+<button id="crypt">Crypt</button>
+<code id="result"></code>
+<script src="./frontend/dist/index.bundle.js"></script>
 <script>
 
-    let pub = '-----BEGIN PUBLIC KEY-----\n' +
-        'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuu2qRgkWJNg5DjMA++tG\n' +
-        'dEX63KuIP7AMdW+Ka1ICy/bFA1Dbk9GpSWaVu9vot+ahuna5XTkO+RgZ+kNRuf4/\n' +
-        'Djpsbv3jrQaNwfh5G2xecy1y36kE4v5lDR7PvMcxvudy1ZuzVtx8rObccgcd4T/+\n' +
-        'hHRvWzJvYcQ+7lEG48UA6Xa5qBsq05t4UiscnyOKlFlcSiExKcyQkfgfp+K//Iyt\n' +
-        'Ch/maEaWDtRGgDsG11DRJQHaBh9InVVKNiU0JfdHtmpHobuDeqMF/0ZC5J2de0xC\n' +
-        '77FRfdLKRk2UPk5ba14fDJHwIT0yCvjdo/kAyU3v4wh640TgDyAmDmX2UVhf4aD/\n' +
-        'PwIDAQAB\n' +
-        '-----END PUBLIC KEY-----\n'
 
-    console.log(pub)
+    document.getElementById('crypt').addEventListener('click', () => {
+        window.CryptoObj.crypt(
+            document.getElementById('tocr').value,
+            document.getElementById('pub').value
+        ).then((k) => {
+            document.getElementById('result').textContent = window.CryptoObj.arrayBufferToBase64String(k)
+
+        })
+    })
 
 
 </script>

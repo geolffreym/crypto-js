@@ -62,6 +62,34 @@ module.exports = class Crypto {
         }
     }
 
+    decrypt(privateKey, dataBuffer) {
+        /***
+         * Return decrypted string
+         * @param {Buffer}
+         * @return {String}
+         */
+        return crypto.privateDecrypt(
+            {
+                key: privateKey.toString(),
+                padding: crypto.RSA_PKCS1_OAEP_PADDING,
+                passphrase: this.p.get('crypto_pv_passphrase')
+            }, dataBuffer
+        )
+    }
+
+    convertPemToBinary(pem) {
+        let encoded = ''
+        let lines = pem.split('\n');
+        lines.map((line) => {
+            if (line.trim().length > 0 &&
+                line.search('-BEGIN ENCRYPTED PRIVATE KEY-') < 0 &&
+                line.search('-END ENCRYPTED PRIVATE KEY-') < 0) {
+                encoded += line.trim()
+            }
+        })
+        return encoded
+    }
+
     getPair() {
         /***
          * Generate PV and PUB Keys based on settings

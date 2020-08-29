@@ -24,56 +24,72 @@
 export default class Crypto {
 
     constructor() {
-        window.crypto = window.crypto || window.msCrypto
         if (!window.crypto) throw Error('Crypto not supported.')
         // Keep attribute private crypto handler
         this._crypt = window.crypto.subtle
-        this._sign = {
-            name: "RSASSA-PKCS1-v1_5",
-            hash: {name: "SHA-256"},
-            modulusLength: 2048,
-            extractable: false,
-            publicExponent: 0x10001
-        }
-
+        this._sign = {modulusLength: 2048, name: "RSA-OAEP", hash: {name: "SHA-1"}};
     }
 
-    base64StringToArrayBuffer(b64str) {
-        let byteStr = atob(b64str)
-        let bytes = new Uint8Array(byteStr.length)
-        for (let i = 0; i < byteStr.length; i++) {
-            bytes[i] = byteStr.charCodeAt(i)
+    base64StringToArrayBuffer(base64) {
+        let binary_string = atob(base64);
+        let len = binary_string.length;
+        let bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binary_string.charCodeAt(i);
         }
-        return bytes.buffer
+        return bytes.buffer;
     }
 
     convertPemToBinary(pem) {
         let encoded = ''
-        let lines = pem.split('\n')
-        for (let i = 0; i < lines.length; i++) {
-            if (lines[i].trim().length > 0 &&
-                lines[i].indexOf('-BEGIN RSA PRIVATE KEY-') < 0 &&
-                lines[i].indexOf('-BEGIN RSA PUBLIC KEY-') < 0 &&
-                lines[i].indexOf('-END RSA PRIVATE KEY-') < 0 &&
-                lines[i].indexOf('-END RSA PUBLIC KEY-') < 0) {
-                encoded += lines[i].trim()
+        let lines = pem.split('\n');
+        lines.map((line) => {
+            if (line.trim().length > 0 &&
+                line.search('-BEGIN RSA PUBLIC KEY-') < 0 &&
+                line.search('-BEGIN PUBLIC KEY-') < 0 &&
+                line.search('-END PUBLIC KEY-') < 0 &&
+                line.search('-END RSA PUBLIC KEY-') < 0) {
+                encoded += line.trim()
             }
+        })
+        return encoded
+    }
+
+    str2abUtf8(myString) {
+        return new TextEncoder("utf-8").encode(myString);
+    }
+
+    arrayBufferToBase64String(arrayBuffer) {
+        let byteString = '';
+        let byteArray = new Uint8Array(arrayBuffer)
+        for (let i = 0; i < byteArray.byteLength; i++) {
+            byteString += String.fromCharCode(byteArray[i]);
         }
-        return this.base64StringToArrayBuffer(encoded)
+        return btoa(byteString);
     }
 
-    importKey() {
-        this._crypt.importKey('spki', this._sign, {
-            name: "RSA-OAEP"
-        }, true, ["encrypt"])
-    }
-
-    crypt(data, pub) {
-        this._crypt.encrypt(
-            {
-                name: 'RSA-PSS'
-            }, pub, data
+    importKey(pem) {
+        let key = this.convertPemToBinary(pem)
+        key = this.base64StringToArrayBuffer(key)
+        return this._crypt.importKey('spki', key,
+            this._sign, false, ["encrypt"]
         )
     }
 
+    crypt(data, pub) {
+        return new Promise((res) => {
+            this.importKey(pub).then((key) => {
+                this._crypt.encrypt(
+                    this._sign, key, this.str2abUtf8(data),
+                ).then(res)
+            })
+        })
+    }
+
+    decrypt() {
+
+    }
 }
+
+// Global crypto
+window.CryptoObj = new Crypto()
