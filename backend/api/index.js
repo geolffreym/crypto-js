@@ -31,8 +31,7 @@ import resolvers from '../api/resolvers'
             context: {mongo: db},
             playground: true,
             introspection: true,
-            tracing: true,
-            scheme: makeExecutableSchema({
+            schema: makeExecutableSchema({
                 typeDefs: scheme,
                 resolvers: resolvers
             }),

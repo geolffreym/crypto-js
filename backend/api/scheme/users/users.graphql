@@ -1,14 +1,5 @@
 scalar JSON
 
-input UserFilterField{
-    genres: String
-    imdb_code:String
-    date_uploaded_unix:Int
-    language:String
-    year:Int
-}
-
-
 input UserFilter{
     limit: Int,
     offset: Int,
@@ -26,7 +17,6 @@ type User {
 
 }
 
-
 type Cards {
     user: User!
     card_number: String!
@@ -41,7 +31,7 @@ type Cards {
 
 type Query {
     User(id: Int!): User
-    Users(filter:UserFilter, by:UserFilterField): [User]
+    Users(filter: UserFilter): [User!]!
 }
 
 
