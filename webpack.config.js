@@ -19,10 +19,13 @@ module.exports = function (env) {
 
     return {
         mode: ENV,
-        entry: ['./backend/api/index.js'],
+        entry: {
+            './backend/api/index': './backend/api/index.js',
+            './frontend/index': './frontend/index.js',
+        },
         output: {
             path: path.resolve(__dirname, './backend/dist'),
-            filename: 'index.bundle.js'
+            filename: '[name].bundle.js'
         },
         watchOptions: {
             ignored: /node_modules/,
