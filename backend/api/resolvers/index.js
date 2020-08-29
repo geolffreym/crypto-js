@@ -1,4 +1,4 @@
-import Users from '../resolvers/users/users';
+import Users from 'api/resolvers/users';
 
 export default [
     Users

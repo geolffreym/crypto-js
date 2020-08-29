@@ -39,11 +39,9 @@ type Cards {
 
 }
 
-
 type Query {
-#    User(id: Int!): User
-#    Users(filter:UserFilter, by:UserFilterField): [User]
-    hello: String
+    User(id: Int!): User
+    Users(filter:UserFilter, by:UserFilterField): [User]
 }
 
 

@@ -2,10 +2,8 @@ require("dotenv").config();
 
 const Dotenv = require('dotenv-webpack');
 const path = require("path");
-
 const nodeExternals = require('webpack-node-externals');
 const webpack = require("webpack");
-
 const Settings = require("./package.json");
 
 module.exports = function (env) {
@@ -21,9 +19,9 @@ module.exports = function (env) {
 
     return {
         mode: ENV,
-        entry: ['@babel/polyfill', './backend/api/index.js'],
+        entry: ['./backend/api/index.js'],
         output: {
-            path: path.resolve(__dirname, './dist/api'),
+            path: path.resolve(__dirname, './backend/dist'),
             filename: 'index.bundle.js'
         },
         watchOptions: {
@@ -35,12 +33,32 @@ module.exports = function (env) {
             // Need this when working with express, otherwise the build fails
             __dirname: false,   // if you don't put this is, __dirname
             __filename: false,  // and __filename return blank or /
+        }, module: {
+            rules: [
+                {
+                    test: /\.js?$/,
+                    exclude: /node_modules/,
+                    loader: `babel-loader`,
+                    options: {
+                        sourceType: 'unambiguous',
+                        presets: [['@babel/preset-env', {
+                            "useBuiltIns": "usage",
+                            "corejs": 3,
+                        }]],
+                        plugins: [
+                            ['@babel/plugin-transform-runtime', {
+                                "regenerator": true
+                            }]
+                        ]
+                    }
+                },
+            ]
         },
         externals: [nodeExternals()], // Need this to avoid error when working with Express
         resolve: {
             extensions: [`.js`, `.jsx`],
             modules: [
-                path.resolve(`./src`),
+                path.resolve(`./backend`),
                 path.resolve(`./node_modules`)
             ]
         },

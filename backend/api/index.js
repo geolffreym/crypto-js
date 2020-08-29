@@ -6,48 +6,71 @@ import express from 'express';
 import cors from 'cors';
 
 const MongoClient = require('mongodb').MongoClient;
-
 const {ApolloServer} = require('apollo-server-express');
+const {makeExecutableSchema} = require('graphql-tools');
 const bodyParser = require('body-parser');
-
 const MONGO_URL = process.env.MONGO_URL;
 
 
 //Settings
-import scheme from './scheme'
-import resolvers from './resolvers'
+import scheme from '../api/scheme'
+import resolvers from '../api/resolvers'
 
 (async () => {
+
     try {
         //Express
         const app = express();
-        app.use(cors());
-        app.use(bodyParser.json());
-        app.use(bodyParser.urlencoded({extended: true}));
-        app.use(bodyParser.raw());
-        app.get('/health', (req, res) => res.send('OK'));
+        const port = 4000
 
         //Setting mongo
         let mongo = await MongoClient.connect(MONGO_URL);
         let db = mongo.db('crypto');
 
         const server = new ApolloServer({
-            typeDefs: scheme,
-            resolvers: resolvers,
-            // Express context https://www.apollographql.com/docs/apollo-server/api/apollo-server/
-            context: ({req, res}) => {
-                // add the user to the context
-                return {mongo: db}
-            },
+            context: {mongo: db},
+            playground: true,
+            introspection: true,
+            tracing: true,
+            scheme: makeExecutableSchema({
+                typeDefs: scheme,
+                resolvers: resolvers
+            }),
         });
 
+        // Middleware..
         server.applyMiddleware({
-            app: app,
-            path: '/',
+            app: app, path: '/'
         });
 
-        app.listen(4000);
-        console.log('Running a GraphQL API server at localhost:4000/graphql');
+        app.use(cors());
+        app.use(bodyParser.json());
+        app.use(bodyParser.urlencoded({extended: true}));
+        app.use(bodyParser.raw());
+        app.get('/health', (req, res) => res.send('OK'));
+
+        // Express server
+        const eServer = app.listen(
+            port, (err) => {
+                if (err) {
+                    console.error(err);
+                    process.exit(1)
+                }
+
+                // Running OK!
+                console.log('Running a GraphQL API server at :4000/graphql')
+            }
+        );
+
+        process.on('SIGTERM', () => {
+            eServer.close((err) => {
+                console.error(err);
+                process.exit(1)
+            });
+
+            process.exit(0)
+        })
+
     } catch (err) {
         console.log(err);
     }

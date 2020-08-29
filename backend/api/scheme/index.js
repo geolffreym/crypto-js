@@ -1,14 +1,7 @@
-module.exports = function lol() {
-    const {fileLoader, mergeTypes} = require("merge-graphql-schemas");
-    const path = require('path');
+import * as path from 'path';
+import {fileLoader, mergeTypes} from "merge-graphql-schemas";
 
-    const rootDir = path.join(__dirname, '/../api/scheme');
-    console.log(rootDir);
-    const schemes = fileLoader(rootDir, {recursive: true});
-    console.log(schemes);
-    console.log([mergeTypes(schemes)]);
-};
+const rootDir = path.resolve(path.dirname(__dirname), '../backend/api/scheme');
+const schemes = fileLoader(rootDir, {recursive: true});
+export default [mergeTypes(schemes)];
 
-const p = require('./index');
-
-p();

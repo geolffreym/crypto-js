@@ -6,18 +6,19 @@ const DEFAULT_SORT_RESULT = 'first_name';
 export default {
     Query: {
 
-        //User resolver
-        user: async (_, {id}, context) => {
+        // User resolver
+        User: (_, {id}, context) => {
             /***
              * Fetch user by id
              * @param id: <int>
              */
-            return await context.mongo
+            return context.mongo
                 .collection('users')
                 .findOne({id: id});
 
         },
-        //Users resolver
+
+        // Users resolver
         Users: async (_, {filter, by}, context) => {
             /***
              * Fetch filtered movies
@@ -49,7 +50,6 @@ export default {
             movies = movies.sort({[sort_by]: (order === 'asc' && 1 || -1)});
 
             return movies.toArray()
-        },
-        hello: () => 'Hello World2!'
+        }
     }
 };

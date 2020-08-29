@@ -9,15 +9,17 @@
     }
   },
   "scripts": {
-    "build": "rm -rf dist/api && webpack",
-    "start": "node ./dist/api/index.bundle.js",
-    "dev": "rm -rf dist/api && webpack --env.development && node ./dist/api/index.bundle.js",
+    "build": "rm -rf backend/dist/ && webpack",
+    "start": "node ./backend/dist/index.bundle.js",
+    "dev": "rm -rf backend/dist/ && webpack --env.development && node ./backend/dist/index.bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "ZorrillosDev",
   "license": "MIT",
   "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.11.0",
     "body-parser": "^1.19.0",
+    "core-js": "^3.6.5",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
