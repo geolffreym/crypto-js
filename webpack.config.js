@@ -20,7 +20,7 @@ module.exports = function (env) {
     return {
         mode: ENV,
         entry: {
-            './backend/api/index': './backend/api/index.js',
+            './index': './backend/api/index.js',
             './frontend/index': './frontend/index.js',
         },
         output: {
