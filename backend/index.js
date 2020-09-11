@@ -24,8 +24,6 @@
 const Crypto = require('./lib/crypto');
 const CryptoObj = new Crypto();
 
-// console.log(CryptoObj.getPair())
-
 const pv = '-----BEGIN ENCRYPTED PRIVATE KEY-----\n' +
     'MIIFLTBXBgkqhkiG9w0BBQ0wSjApBgkqhkiG9w0BBQwwHAQIM63NsDAJrCcCAggA\n' +
     'MAwGCCqGSIb3DQIJBQAwHQYJYIZIAWUDBAEqBBBKToMgLk927VcSgKRiJmMSBIIE\n' +
@@ -58,8 +56,10 @@ const pv = '-----BEGIN ENCRYPTED PRIVATE KEY-----\n' +
     '-----END ENCRYPTED PRIVATE KEY-----\n'
 
 
-let buffer = new Buffer(
-    'Xkth5Kvd/almzTi0ZW3w+2AN3ovhTGL5hsYKyBSgWMTUHnJOyv389pVnMsOdZVpSzP7lsaK24fFiLsQv+m3goA0W9w2G2XAS9tKYVzcxDKr5QM4kqnQuuyZU8Ext4pkDG7sV8mFM8TMbsePVanCFe/SKZGxLP75FThh0wwWUV8rCNXFMqLCUX/6epwh8qWRM0xf/+AyGygOoh8v3bAgcZZMVE61Gfs0kS+jN7RG/n0l+M8MeD9bOpoBG20/yk/30nPry08Dit6tKS+trtGiWcq2124swnYccPaNQbjuzv7qbDMlPadfmNTYx1tzStB2AyWHQeNWf3dj5UVQeqsC2tA==',
-    'ascii'
+let buffer = Buffer.from(
+    'mF79wfGVJ6FA5a/+PZ7JU4st08iw2O6KvHttgn16WlKtqCpbBRNfUpa6Ky2cx/EhSXHB5FNJqQBnT1/0U4fTkWXVzSllHVUttFityk+feEVomKTToCPVjbyZPs61U0Gk56RnZznMcEVsDqhS9rgUPgWrhu9AKNH0URyrLR17f0aWTy2H2kocprt5famIIoTWho0EFqj/Tuek6VeXazvptWwgv3T2LfhagiGdsqNamcnBGbIO6RZaHE8xK9mVBYHlEGebkVlvQCWFmu2Vk7BiZcRdRZAEmW4BxZamEoPC/zvZIhV/zAkAiOjaW6clGKLZgwHtrQDdyYxKy7jik92Y2g==',
+    'base64'
     )
+
+
 console.log(CryptoObj.decrypt(pv, buffer));

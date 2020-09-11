@@ -27,11 +27,18 @@ export default class Crypto {
         if (!window.crypto) throw Error('Crypto not supported.')
         // Keep attribute private crypto handler
         this._crypt = window.crypto.subtle
-        this._sign = {modulusLength: 2048, name: "RSA-OAEP", hash: {name: "SHA-1"}};
+        this._sign = {
+            modulusLength: 2048, name: "RSA-OAEP",
+            hash: {name: "SHA-1"}
+        };
     }
 
     base64StringToArrayBuffer(base64) {
         let binary_string = atob(base64);
+        return this.stringToArrayBuffer(binary_string)
+    }
+
+    stringToArrayBuffer(binary_string) {
         let len = binary_string.length;
         let bytes = new Uint8Array(len);
         for (let i = 0; i < len; i++) {
@@ -55,8 +62,21 @@ export default class Crypto {
         return encoded
     }
 
+    checkJSON(str) {
+        try {
+            return new Uint8Array(
+                JSON.parse(str)
+            ).buffer
+        } catch (e) {
+            return str
+        }
+    }
+
     str2abUtf8(myString) {
-        return new TextEncoder("utf-8").encode(myString);
+        console.log(this.checkJSON(myString));
+        return new TextEncoder('utf8').encode(
+            this.checkJSON(myString)
+        )
     }
 
     arrayBufferToBase64String(arrayBuffer) {
@@ -81,7 +101,7 @@ export default class Crypto {
             this.importKey(pub).then((key) => {
                 this._crypt.encrypt(
                     this._sign, key, this.str2abUtf8(data),
-                ).then(res)
+                ).then(res).catch((e) => console.log(e))
             })
         })
     }

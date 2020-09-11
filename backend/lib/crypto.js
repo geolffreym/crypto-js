@@ -71,7 +71,7 @@ module.exports = class Crypto {
         return crypto.privateDecrypt(
             {
                 key: privateKey.toString(),
-                padding: crypto.RSA_PKCS1_OAEP_PADDING,
+                padding: crypto.RSA_PKCS1_PADDING,
                 passphrase: this.p.get('crypto_pv_passphrase')
             }, dataBuffer
         )
