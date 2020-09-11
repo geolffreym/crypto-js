@@ -73,7 +73,6 @@ export default class Crypto {
     }
 
     str2abUtf8(myString) {
-        console.log(this.checkJSON(myString));
         return new TextEncoder('utf8').encode(
             this.checkJSON(myString)
         )
